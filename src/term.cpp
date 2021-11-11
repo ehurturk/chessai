@@ -1,6 +1,4 @@
 #include "../include/term.h"
-#include <curses.h>
-
 
 struct Term* create_term() { 
 	struct Term* term = new struct Term();
@@ -8,7 +6,6 @@ struct Term* create_term() {
 	initscr();
 	raw();
 	noecho();
-	curs_set(0);
 	keypad(stdscr, TRUE);
 
 	int row, col;
@@ -21,5 +18,6 @@ struct Term* create_term() {
 
 void delete_term(const struct Term* term) {
 	curs_set(1);
+	endwin();
 	delete term;
 }
