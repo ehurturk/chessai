@@ -6,6 +6,7 @@ struct Term* create_term() {
 	initscr();
 	raw();
 	noecho();
+	//timeout(0);
 	keypad(stdscr, TRUE);
 
 	int row, col;

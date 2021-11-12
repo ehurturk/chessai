@@ -14,6 +14,7 @@ void Engine::start() {
 		printw("\r");
 		echo();
 		clrtoeol();
+		curs_set(1);
  		printw("Enter the piece you want to play and where to play (e.g. p-e6 or P-e6): ");
 		std::string input;
 		int ch;
@@ -22,8 +23,9 @@ void Engine::start() {
 		}
 		noecho();
 		curs_set(0);
-		char c = getch();
-		if (c == 'q') {
+
+		char c=getch();
+		if (c==CTRL('q')) {
 			break;
 		}
  		refresh();
@@ -34,6 +36,11 @@ void Engine::generate_moves() {
 		
 }
 
+/*
+ * initial board printing.
+ * the borders would not be altered during the game
+ * however, the pieces would be altered.
+*/
 void Engine::print_board() {
 	/* UPPER LOGO IS 11x82 */
 	mvprintw(term->row/2-30, term->col/2-49, C_1);
@@ -60,6 +67,8 @@ void Engine::print_board() {
 			mvprintw(row, col, line.c_str());
 	}
 	mvprintw(term->row/2+32-14, term->col /2 -40, "     a         b         c         d         e         f         g         h     ");
+
+
 }
 
 Engine::~Engine() {

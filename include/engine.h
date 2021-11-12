@@ -24,7 +24,24 @@
 #define C_10 "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |"
 #define C_11 " '----------------'  '----------------'  '----------------'  '----------------'  '----------------' "
 
+#define PAWN_1  " _ "
+#define WPAWN_2 "( )"
+#define WPAWN_3 "/ \\"
+
+#define KNIGHT_1  " ,^. "
+#define WKNIGHT_2 "(  '\\"
+#define WKNIGHT_3 "|  \\ "
+
+#define BISHOP_1  " o  "
+#define WBISHOP_2 "( /)"
+#define WBISHOP_3 "/  \\)"
+
 #define GET_CX(x) 
+
+#ifndef CTRL
+#define CTRL(c) ((c) & 037)
+#endif
+
 
 struct Piece {
 	int type;
