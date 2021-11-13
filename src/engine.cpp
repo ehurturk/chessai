@@ -19,7 +19,7 @@ void Engine::start() {
 /* game loop*/
 void Engine::update() {
 	while (true) {
-		move(term->row/2 + term->row/3, 0);
+		move(term->row/2+term->row/2.3, 0);
 		echo();
 		clrtoeol();
 		curs_set(1);
@@ -144,12 +144,12 @@ void Engine::move_piece(const char* loc, const char* des_loc) {
 	int dy_offset = des_offsets.second;
 
 	if (dx_offset == LOC_UNDEFINED || y_offset == LOC_UNDEFINED || x_offset == LOC_UNDEFINED || dy_offset == LOC_UNDEFINED) {
-		move(term->row/2 + term->row/3 + 1, 0);
+		move(term->row/2 + term->row/2.5 + 1, 0);
 		printw("Invalid input. Please try again.");
 		return;
 	}
 	else {
-		move(term->row/2 + term->row/3 + 1, 0);
+		move(term->row/2 + term->row/2.5 + 1, 0);
 		clrtoeol();
 	}
 
