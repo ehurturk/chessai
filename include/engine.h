@@ -9,6 +9,9 @@
 #define BLACK -1
 #define WHITE 1
 
+#define BOARD_WIDTH 81
+#define BOARD_HEIGHT 32
+
 #define B_LINE "*---------*---------*---------*---------*---------*---------*---------*---------*"
 #define P_LINE "|         |         |         |         |         |         |         |         |"
 
@@ -54,10 +57,13 @@ class Engine {
 		Engine(const std::string& initial);
 		~Engine();
 		void start();
-		
+		void update();
 	private:
 		void print_board();	
+		void print_pieces();
+		void print_piece(const char piece, const char* place);
 		void generate_moves();
+		void move_piece(int y, int x);
 	
 
 		std::string board;

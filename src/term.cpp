@@ -13,7 +13,6 @@ struct Term* create_term() {
 	getmaxyx(stdscr, row, col);
 	term->row = row;
 	term->col = col;
-	
 	return term;
 }
 
