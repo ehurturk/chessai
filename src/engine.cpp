@@ -23,7 +23,7 @@ void Engine::update() {
 		echo();
 		clrtoeol();
 		curs_set(1);
- 		printw("Enter the piece you want to play and where to play (e.g. p-e6 or P-e6): ");
+ 		printw("Enter the piece you want to play and where to play (e.g. p-e6-e7 or B-c1-e3): ");
 		std::string input;
 		int ch;
 		while ((ch=getch()) != '\n') {
@@ -79,7 +79,9 @@ void Engine::print_board() {
 }
 
 std::pair<int, int> get_piece_loc(const char* loc) {
-	if (loc == NULL) return std::make_pair(0, 0);
+	if (loc == NULL || loc[0]> 0x68 || loc[0]<0x61 || loc[1] > 0x38 || loc[1] < 0x31) {
+		return std::make_pair(LOC_UNDEFINED, LOC_UNDEFINED);
+	}
 	char loc1 = loc[0]; /* a */
 	char loc2 = loc[1]; /* 3 */
 
@@ -136,15 +138,24 @@ void Engine::move_piece(const char* loc, const char* des_loc) {
 	std::pair<int, int> offsets = get_piece_loc(loc);
 	int x_offset = offsets.first;
 	int y_offset = offsets.second;
-	
+
 	std::pair<int, int> des_offsets = get_piece_loc(des_loc);
 	int dx_offset = des_offsets.first;
 	int dy_offset = des_offsets.second;
 
+	if (dx_offset == LOC_UNDEFINED || y_offset == LOC_UNDEFINED || x_offset == LOC_UNDEFINED || dy_offset == LOC_UNDEFINED) {
+		move(term->row/2 + term->row/3 + 1, 0);
+		printw("Invalid input. Please try again.");
+		return;
+	}
+	else {
+		move(term->row/2 + term->row/3 + 1, 0);
+		clrtoeol();
+	}
 
 	move(term->row/2+y_offset, term->col/2-x_offset-4); /* go to the very beginning of the cell */
 	/* not for the entire line, get the current char and move it to the specified location */
-	
+		
 	for (int i = 0; i < 3; i++) {
 		std::string res;
 		for (int j = 0; j < 8; j++) {

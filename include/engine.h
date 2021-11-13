@@ -45,6 +45,7 @@
 #define CTRL(c) ((c) & 037)
 #endif
 
+#define LOC_UNDEFINED -999
 
 struct Piece {
 	int type;
