@@ -12,4 +12,9 @@ g++ src/main.cpp -o main -Iinclude/engine.h src/engine.cpp -Iinclude/term.h src/
 ```
 And just run the `main` binary output to run the program.
 
+## Roadmap + TODO
+- [x] Game UI
+- [] Game mechanics (currently working on)
+- [] Game AI
+
 Thanks for being interested in.
