@@ -63,7 +63,7 @@ class Engine {
 		void print_pieces();
 		void print_piece(const char piece, const char* place);
 		void generate_moves();
-		void move_piece(int y, int x);
+		void move_piece(const char* loc, const char* des_loc);
 	
 
 		std::string board;

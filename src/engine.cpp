@@ -1,6 +1,7 @@
 /* engine.cpp */
 
 #include "../include/engine.h"
+#include <cassert>
 #include <cstddef>
 #include <ncurses.h>
 
@@ -11,7 +12,6 @@ void Engine::start() {
 	term = create_term();
 	print_board();
 	print_pieces();
-	move(term->row/2 + term->row/3, term->col/2 + term->col/3);
 	/* game loop */
 	update();
 }
@@ -19,7 +19,7 @@ void Engine::start() {
 /* game loop*/
 void Engine::update() {
 	while (true) {
-		printw("\r");
+		move(term->row/2 + term->row/3, 0);
 		echo();
 		clrtoeol();
 		curs_set(1);
@@ -29,6 +29,7 @@ void Engine::update() {
 		while ((ch=getch()) != '\n') {
 			input.push_back(ch);
 		}
+		move_piece(input.c_str(), "b1");
 		noecho();
 		curs_set(0);
 
@@ -77,40 +78,102 @@ void Engine::print_board() {
 	mvprintw(term->row/2+BOARD_HEIGHT-14, term->col /2 - BOARD_WIDTH/2, "     a         b         c         d         e         f         g         h     ");
 }
 
+std::pair<int, int> get_piece_loc(const char* loc) {
+	if (loc == NULL) return std::make_pair(0, 0);
+	char loc1 = loc[0]; /* a */
+	char loc2 = loc[1]; /* 3 */
+
+	int x_offset = 35-10*(loc1-0x61);
+	int y_offset = (3-(loc2-0x31))*4;
+	y_offset = y_offset > 0 ? y_offset + 2 : y_offset - 2;
+	return std::make_pair(x_offset, y_offset);
+}
+
 void Engine::print_piece(const char piece, const char* place) {
-	if (place == NULL) {
-		return;
+
+
+	std::pair<int, int> offsets = get_piece_loc(place);
+	int x_offset = offsets.first;
+	int y_offset = offsets.second;
+
+	/*
+	 * Unfortunately I couldn't use for loop since the ASCII art is defined using #define.
+	 * Thus i can't actually retrieve the ASCII art using PAWN_i since i is being
+	 * considered as the char i, not the value of i.
+	*/
+	switch(piece) {
+		case 'p':	
+			move(term->row/2+y_offset, term->col/2-x_offset-1);
+			printw(PAWN_1);
+			move(term->row/2+y_offset+1, term->col/2-x_offset-1);
+			printw(WPAWN_2);
+			move(term->row/2+y_offset+2, term->col/2-x_offset-1);
+			printw(WPAWN_3);
+			break;
+		case 'k':
+			move(term->row/2+y_offset, term->col/2-x_offset-2);
+			printw(KNIGHT_1);
+			move(term->row/2+y_offset+1, term->col/2-x_offset-2);
+			printw(WKNIGHT_2);
+			move(term->row/2+y_offset+2, term->col/2-x_offset-2);
+			printw(WKNIGHT_3);
+			break;
+		case 'b':
+			move(term->row/2+y_offset, term->col/2-x_offset-2);
+			printw(BISHOP_1);
+			move(term->row/2+y_offset+1, term->col/2-x_offset-2);
+			printw(WBISHOP_2);
+			move(term->row/2+y_offset+2, term->col/2-x_offset-2);
+			printw(WBISHOP_3);
+			break;
 	}
 
-	char loc1 = place[0]; /* a */
-	char loc2 = place[1]; /* 3 */
+	//addch(piece);
+}
 
-	int x_offset, y_offset;
 
-	x_offset = 35-10*(loc1-0x61);
-	y_offset = (3-(loc2-0x31))*4;
-	y_offset = y_offset > 0 ? y_offset + 2 : y_offset - 2;
+void Engine::move_piece(const char* loc, const char* des_loc) {
+	std::pair<int, int> offsets = get_piece_loc(loc);
+	int x_offset = offsets.first;
+	int y_offset = offsets.second;
+	
+	std::pair<int, int> des_offsets = get_piece_loc(des_loc);
+	int dx_offset = des_offsets.first;
+	int dy_offset = des_offsets.second;
 
-	move(term->row/2+y_offset+1, term->col/2-x_offset);
-	addch(piece);
+
+	move(term->row/2+y_offset, term->col/2-x_offset-4); /* go to the very beginning of the cell */
+	/* not for the entire line, get the current char and move it to the specified location */
+	
+	for (int i = 0; i < 3; i++) {
+		std::string res;
+		for (int j = 0; j < 8; j++) {
+			char ch = inch();
+			res += ch;
+			addch(' ');
+			move(term->row/2+y_offset+i, term->col/2-x_offset-4+j);
+		}
+		move(term->row/2+dy_offset+i, term->col/2-dx_offset-4);
+		printw(res.substr(1, res.length()).c_str());
+	}
 }
 
 void Engine::print_pieces() {
 	print_piece('p', "a2");
-	print_piece('p', "b2");
-	print_piece('p', "c2");
+	print_piece('k', "b2");
+	print_piece('b', "c2");
 	print_piece('p', "d2");
-	print_piece('p', "e2");
-	print_piece('p', "f2");
+	print_piece('k', "e2");
+	print_piece('b', "f2");
 	print_piece('p', "g2");
-	print_piece('p', "h2");
-	print_piece('p', "a1");
+	print_piece('k', "h2");
+	print_piece('b', "a1");
 	print_piece('p', "b1");
-	print_piece('p', "c1");
-	print_piece('p', "d1");
+	print_piece('k', "c1");
+	print_piece('b', "d1");
 	print_piece('p', "e1");
-	print_piece('p', "f1");
-	print_piece('p', "g1");
+	print_piece('k', "f1");
+	print_piece('b', "g1");
 	print_piece('p', "h1");
 }
 
