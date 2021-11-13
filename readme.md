@@ -14,7 +14,7 @@ And just run the `main` binary output to run the program.
 
 ## Roadmap + TODO
 - [x] Game UI
-- [] Game mechanics (currently working on)
-- [] Game AI
+- [ ] Game mechanics (currently being worked on)
+- [ ] Game AI
 
 Thanks for being interested in.
